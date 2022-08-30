@@ -51,7 +51,13 @@ function RootNavigator() {
         options={{ title: 'Oops!' }}
       />
       <Stack.Group screenOptions={{ presentation: 'transparentModal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen
+          name="Modal"
+          component={ModalScreen}
+          options={({}) => ({
+            title: 'New Note',
+          })}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -33,14 +33,19 @@ export default function ModalScreen() {
       />
       <TextInput
         placeholder="Content"
-        style={styles.input}
+        style={styles.textarea}
         onChangeText={setContent}
         value={content}
         multiline
         numberOfLines={4}
       />
-      <Pressable style={styles.button} onPress={() => {}}>
-        <Text style={styles.button}>Save</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+          alert('Saved');
+        }}
+      >
+        <Text style={{ fontSize: 16 }}>Save</Text>
       </Pressable>
     </View>
   );
@@ -50,31 +55,45 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
   separator: {
-    marginVertical: 30,
+    marginVertical: 10,
     height: 1,
     width: '80%',
   },
   input: {
     margin: 12,
     borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    textAlign: 'left',
+    textAlignVertical: 'center',
+    width: '80%',
+  },
+
+  textarea: {
+    margin: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
     padding: 10,
     textAlign: 'left',
     textAlignVertical: 'top',
     width: '80%',
   },
   button: {
+    width: '80%',
+    marginTop: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 6,
+    paddingVertical: 16,
     paddingHorizontal: 32,
+    elevation: 10,
     borderRadius: 4,
-    elevation: 3,
     backgroundColor: '#ff4081',
   },
 });
