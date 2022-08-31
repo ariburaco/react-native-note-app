@@ -1,23 +1,26 @@
-import { combineReducers, configureStore, createStore } from "@reduxjs/toolkit";
-import counterSlice from "./slices/counterSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistStore, persistReducer, PersistConfig } from "redux-persist";
-import thunk from "redux-thunk";
+import { combineReducers, configureStore, createStore } from '@reduxjs/toolkit';
+import noteSlice from './slices/noteSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
+import thunk from 'redux-thunk';
+import selectedNotesSlice from './slices/selectedNotesSlice';
 
 const persistConfig = {
-  key: "root",
+  key: 'notes',
   storage: AsyncStorage,
+  whitelist: ['notes'],
 };
 
 const reducers = combineReducers({
-  counter: counterSlice,
+  notes: noteSlice,
+  selectedNotes: selectedNotesSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: process.env.NODE_ENV !== 'production',
   middleware: [thunk],
 });
 

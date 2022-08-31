@@ -19,6 +19,14 @@ import {
   RootTabScreenProps,
 } from 'types';
 import LinkingConfiguration from './LinkingConfiguration';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import {
+  clearSelectedNotes,
+  selectCurrentNotes,
+  setSelectedNotes,
+} from '../store/slices/selectedNotesSlice';
+import { View } from 'components/Themed';
+import { deleteSelectedNotes } from 'store/slices/noteSlice';
 
 export default function Navigation({
   colorScheme,
@@ -50,7 +58,7 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: 'Oops!' }}
       />
-      <Stack.Group screenOptions={{ presentation: 'transparentModal' }}>
+      <Stack.Group>
         <Stack.Screen
           name="Modal"
           component={ModalScreen}
@@ -67,6 +75,13 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const selectedNotes = useAppSelector(selectCurrentNotes);
+  const dispatch = useAppDispatch();
+
+  const onPressDelete = () => {
+    dispatch(deleteSelectedNotes(selectedNotes));
+    dispatch(clearSelectedNotes());
+  };
 
   return (
     <BottomTab.Navigator
@@ -82,19 +97,37 @@ function BottomTabNavigator() {
           title: 'Notes',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              <FontAwesome
-                name="plus"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
+              {selectedNotes.length > 0 && (
+                <Pressable
+                  onPress={() => onPressDelete()}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.5 : 1,
+                  })}
+                >
+                  <FontAwesome name="trash" size={32} />
+                </Pressable>
+              )}
+
+              <Pressable
+                onPress={() => navigation.navigate('Modal')}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}
+              >
+                <FontAwesome
+                  name="plus"
+                  size={32}
+                  style={{ marginHorizontal: 15 }}
+                />
+              </Pressable>
+            </View>
           ),
         })}
       />
@@ -109,5 +142,5 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={30} style={{ marginBottom: 0 }} {...props} />;
 }

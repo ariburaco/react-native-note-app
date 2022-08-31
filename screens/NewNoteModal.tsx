@@ -1,21 +1,27 @@
-import EditScreenInfo from 'components/EditScreenInfo';
-import { View, Text } from 'components/Themed';
-import { StatusBar } from 'expo-status-bar';
+import { Text, View } from 'components/Themed';
 import { useState } from 'react';
-import {
-  Button,
-  Platform,
-  Pressable,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
-import { useAppSelector } from 'store/hooks';
-import { selectCount } from 'store/slices/counterSlice';
+import { Pressable, StyleSheet, TextInput } from 'react-native';
+import 'react-native-get-random-values';
+import { useAppDispatch } from 'store/hooks';
+import { addNote, Note } from 'store/slices/noteSlice';
+import { RootTabScreenProps } from 'types';
+import { v4 as uuidv4 } from 'uuid';
 
-export default function ModalScreen() {
-  const count = useAppSelector(selectCount);
+export default function ModalScreen({ navigation }: any) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  const dispatch = useAppDispatch();
+
+  const addNewNoteHandler = () => {
+    const newNote: Note = {
+      id: uuidv4(),
+      title,
+      content,
+    };
+    dispatch(addNote(newNote));
+    navigation.navigate('TabOne');
+  };
 
   return (
     <View style={styles.container}>
@@ -42,10 +48,10 @@ export default function ModalScreen() {
       <Pressable
         style={styles.button}
         onPress={() => {
-          alert('Saved');
+          addNewNoteHandler();
         }}
       >
-        <Text style={{ fontSize: 16 }}>Save</Text>
+        <Text style={styles.buttonText}>Save</Text>
       </Pressable>
     </View>
   );
@@ -75,7 +81,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     width: '80%',
   },
-
   textarea: {
     margin: 12,
     borderWidth: 1,
@@ -96,4 +101,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#ff4081',
   },
+  buttonText: { fontSize: 16, color: '#fff', fontWeight: 'bold' },
 });

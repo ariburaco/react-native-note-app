@@ -1,11 +1,12 @@
-import { StatusBar } from "expo-status-bar";
-import useCachedResources from "hooks/useCachedResources";
-import useColorScheme from "hooks/useColorScheme";
-import Navigation from "navigation";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Provider } from "react-redux";
-import { persistor, store } from "store";
-import { PersistGate } from "redux-persist/integration/react";
+import { StatusBar } from 'expo-status-bar';
+import useCachedResources from 'hooks/useCachedResources';
+import useColorScheme from 'hooks/useColorScheme';
+import Navigation from 'navigation';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { persistor, store } from 'store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { HoldMenuProvider } from 'react-native-hold-menu';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

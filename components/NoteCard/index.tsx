@@ -1,25 +1,51 @@
 import { Text, View } from 'components/Themed';
 import Colors from 'constants/Colors';
 import Layout from 'constants/Layout';
-import { Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { Note } from 'store/slices/noteSlice';
+import {
+  selectCurrentNotes,
+  setSelectedNotes,
+} from 'store/slices/selectedNotesSlice';
 
 interface CardProps {
-  title?: string;
-  content?: string;
+  note: Note;
 }
 
-const NoteCard = ({ title, content }: CardProps) => {
+const NoteCard = ({ note }: CardProps) => {
+  const [isSelected, setIsSelected] = useState(false);
+  const dispatch = useAppDispatch();
+  const selectedNotes = useAppSelector(selectCurrentNotes);
+
+  useEffect(() => {
+    console.log('selectedNotes', selectedNotes);
+  }, [selectedNotes]);
+
+  const onLongPressHandler = () => {
+    setIsSelected(!isSelected);
+    dispatch(setSelectedNotes(note));
+  };
+
+  const onPressHandler = () => {
+    if (isSelected) {
+      setIsSelected(false);
+      dispatch(setSelectedNotes(note));
+    }
+  };
+
   return (
     <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        // alert('touched');
-      }}
+      style={[styles.container, isSelected ? styles.selected : {}]}
+      onLongPress={() => onLongPressHandler()}
+      activeOpacity={0.6}
+      onPress={() => onPressHandler()}
     >
       <View style={styles.stackCol}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{note.title}</Text>
         <View style={styles.separator} />
-        <Text style={styles.content}>{content}</Text>
+        <Text style={styles.content}>{note.content}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -32,8 +58,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     width: Layout.window.width / 2 - 20,
     borderRadius: 10,
-    borderColor: Colors.light.tint,
+    borderColor: Colors.light.tabIconDefault,
     borderWidth: 0.8,
+  },
+  selected: {
+    borderColor: Colors.light.tint,
   },
   stackCol: {
     display: 'flex',
